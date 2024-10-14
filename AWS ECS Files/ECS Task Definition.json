@@ -1,0 +1,202 @@
+{
+  "taskDefinitionArn": "arn:aws:ecs:eu-west-2:xxxxxxxxxxxxxxxx:task-definition/MyAppTask:4",
+  "containerDefinitions": [
+      {
+          "name": "reverse-proxy",
+          "image": "xxxxxxxxxxxxxxxx.dkr.ecr.eu-west-2.amazonaws.com/my-app/reverse-proxy:latest",
+          "cpu": 154,
+          "memory": 1024,
+          "memoryReservation": 512,
+          "portMappings": [
+              {
+                  "name": "reverse-proxy",
+                  "containerPort": 7080,
+                  "hostPort": 7080,
+                  "protocol": "tcp",
+                  "appProtocol": "http"
+              }
+          ],
+          "essential": true,
+          "environment": [],
+          "mountPoints": [],
+          "volumesFrom": [],
+          "dependsOn": [
+              {
+                  "containerName": "bff",
+                  "condition": "START"
+              },
+              {
+                  "containerName": "rest-api",
+                  "condition": "START"
+              }
+          ],
+          "systemControls": []
+      },
+      {
+          "name": "bff",
+          "image": "xxxxxxxxxxxxxxxx.dkr.ecr.eu-west-2.amazonaws.com/my-app/bff:latest",
+          "cpu": 154,
+          "portMappings": [],
+          "essential": true,
+          "environment": [],
+          "mountPoints": [],
+          "volumesFrom": [],
+          "dependsOn": [
+              {
+                  "containerName": "frontend",
+                  "condition": "START"
+              },
+              {
+                  "containerName": "redis",
+                  "condition": "START"
+              }
+          ],
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/ecs/MyAppTask",
+                  "mode": "non-blocking",
+                  "awslogs-create-group": "true",
+                  "max-buffer-size": "25m",
+                  "awslogs-region": "eu-west-2",
+                  "awslogs-stream-prefix": "ecs"
+              }
+          },
+          "systemControls": []
+      },
+      {
+          "name": "rest-api",
+          "image": "xxxxxxxxxxxxxxxx.dkr.ecr.eu-west-2.amazonaws.com/my-app/rest-api:latest",
+          "cpu": 205,
+          "portMappings": [],
+          "essential": true,
+          "environment": [],
+          "mountPoints": [],
+          "volumesFrom": [],
+          "dependsOn": [
+              {
+                  "containerName": "postgres-db",
+                  "condition": "START"
+              }
+          ],
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/ecs/MyAppTask",
+                  "mode": "non-blocking",
+                  "awslogs-create-group": "true",
+                  "max-buffer-size": "25m",
+                  "awslogs-region": "eu-west-2",
+                  "awslogs-stream-prefix": "ecs"
+              }
+          },
+          "systemControls": []
+      },
+      {
+          "name": "frontend",
+          "image": "xxxxxxxxxxxxxxxx.dkr.ecr.eu-west-2.amazonaws.com/my-app/frontend:latest",
+          "cpu": 154,
+          "portMappings": [],
+          "essential": true,
+          "environment": [],
+          "mountPoints": [],
+          "volumesFrom": [],
+          "logConfiguration": {
+              "logDriver": "awslogs",
+              "options": {
+                  "awslogs-group": "/ecs/MyAppTask",
+                  "mode": "non-blocking",
+                  "awslogs-create-group": "true",
+                  "max-buffer-size": "25m",
+                  "awslogs-region": "eu-west-2",
+                  "awslogs-stream-prefix": "ecs"
+              }
+          },
+          "systemControls": []
+      },
+      {
+          "name": "postgres-db",
+          "image": "xxxxxxxxxxxxxxxx.dkr.ecr.eu-west-2.amazonaws.com/my-app/postgres",
+          "cpu": 154,
+          "portMappings": [],
+          "essential": true,
+          "environment": [],
+          "mountPoints": [],
+          "volumesFrom": [],
+          "systemControls": []
+      },
+      {
+          "name": "redis",
+          "image": "xxxxxxxxxxxxxxxx.dkr.ecr.eu-west-2.amazonaws.com/my-app/redis",
+          "cpu": 154,
+          "portMappings": [],
+          "essential": true,
+          "environment": [],
+          "mountPoints": [],
+          "volumesFrom": [],
+          "systemControls": []
+      }
+  ],
+  "family": "MyAppTask",
+  "taskRoleArn": "arn:aws:iam::xxxxxxxxxxxxxxxx:role/ecsTaskRole",
+  "executionRoleArn": "arn:aws:iam::xxxxxxxxxxxxxxxx:role/ecsTaskExecutionRole",
+  "networkMode": "awsvpc",
+  "revision": 4,
+  "volumes": [],
+  "status": "ACTIVE",
+  "requiresAttributes": [
+      {
+          "name": "ecs.capability.execution-role-awslogs"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.ecr-auth"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.docker-remote-api.1.28"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.docker-remote-api.1.21"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.task-iam-role"
+      },
+      {
+          "name": "ecs.capability.execution-role-ecr-pull"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.docker-remote-api.1.18"
+      },
+      {
+          "name": "ecs.capability.task-eni"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.docker-remote-api.1.29"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.logging-driver.awslogs"
+      },
+      {
+          "name": "com.amazonaws.ecs.capability.docker-remote-api.1.19"
+      },
+      {
+          "name": "ecs.capability.container-ordering"
+      }
+  ],
+  "placementConstraints": [],
+  "compatibilities": [
+      "EC2",
+      "FARGATE"
+  ],
+  "requiresCompatibilities": [
+      "FARGATE"
+  ],
+  "cpu": "1024",
+  "memory": "2048",
+  "runtimePlatform": {
+      "cpuArchitecture": "X86_64",
+      "operatingSystemFamily": "LINUX"
+  },
+  "registeredAt": "2024-10-12T21:52:01.196Z",
+  "registeredBy": "arn:aws:iam::xxxxxxxxxxxxxxxx:root",
+  "tags": []
+}

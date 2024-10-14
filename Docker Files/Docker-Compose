@@ -1,0 +1,84 @@
+services:
+  # reverse proxy
+  reverse-proxy:
+    image: app/reverse-proxy:latest
+    build:
+      context: ../Spring Boot/ReverseProxy
+      dockerfile: Dockerfile
+    ports:
+      - "7080:7080"
+    env_file:
+      - docker.env
+    depends_on:
+      - bff
+      - frontend
+    networks:
+      - app-network
+
+  #backend-for-frontend
+  bff:
+    image: app/bff:latest
+    build:
+      context: ../Spring Boot/BFF
+      dockerfile: Dockerfile
+    env_file:
+      - docker.env
+    depends_on:
+      - redis
+      - rest-api
+    networks:
+      - app-network
+
+  #rest-api
+  rest-api:
+    image: app/rest-api:latest
+    build:
+      context: ../Spring Boot/RESTApi-PostgreSQL
+      dockerfile: Dockerfile
+    env_file:
+      - docker.env
+    depends_on:
+      - postgres-db
+    networks:
+      - app-network
+
+  #frontend
+  frontend:
+    image: app/frontend:latest
+    build:
+      context: ../Angular/Frontend
+      dockerfile: Dockerfile
+    networks:
+      - app-network
+
+  # postgres database (no Dockerfile)
+  postgres-db:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: username
+      POSTGRES_PASSWORD: password
+      PGDATA: /var/lib/postgresql/data
+      POSTGRES_DB: timesheets
+    volumes:
+      - postgres:/data/postgres
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # redis service (no Dockerfile)
+  redis:
+    image: redis:latest
+    env_file:
+      - docker.env
+    networks:
+      - app-network
+    restart: always
+    command: ["--bind", "0.0.0.0"]
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  postgres:
+    driver: local
