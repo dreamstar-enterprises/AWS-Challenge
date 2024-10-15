@@ -1,0 +1,77 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CloudFormation template for IAM policy
+
+#**********************************************************************************************************************#
+#************************************************ AWS CLOUD FORMATION *************************************************#
+#**********************************************************************************************************************#
+
+#CloudFormation template for IAM policy
+Resources:
+  # IAM Policy Resource
+  ECSTaskIAMPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: RDSAndElastiCache_ReadAndWrite
+      PolicyDocument:
+        Version: 2012-10-17
+
+#**********************************************************************************************************************#
+#********************************************************** RDS *******************************************************#
+#**********************************************************************************************************************#
+
+        Statement:
+          - Sid: AllowRDSAccess
+            Effect: Allow
+            Action:
+              - rds:Describe*
+              - rds:CreateDBSnapshot
+              - rds:RestoreDBInstanceFromDBSnapshot
+              - rds:ModifyDBInstance
+              - rds:RebootDBInstance
+              - rds:StartDBInstance
+              - rds:StopDBInstance
+            Resource:
+              - arn:aws:rds:eu-west-2:xxxxxxxx:db:db-rds-database
+
+#**********************************************************************************************************************#
+#***************************************************** ELASTIC CACHE **************************************************#
+#**********************************************************************************************************************#
+
+          - Sid: AllowElastiCacheAccess
+            Effect: Allow
+            Action:
+              - elasticache:Describe*
+              - elasticache:List*
+              - elasticache:ModifyCacheCluster
+              - elasticache:RebootCacheCluster
+              - elasticache:CreateSnapshot
+              - elasticache:BatchStopUpdateAction
+              - elasticache:BatchApplyUpdateAction
+              - elasticache:Connect
+            Resource:
+              - arn:aws:elasticache:eu-west-2:xxxxxxxx:serverlesscache:my-app
+
+#**********************************************************************************************************************#
+#***************************************************** EXPLICIT DENY **************************************************#
+#**********************************************************************************************************************#
+
+          - Sid: DenyDeleteDatabaseAndCache
+            Effect: Deny
+            Action:
+              - rds:DeleteDBInstance
+              - elasticache:DeleteCacheCluster
+            Resource:
+              - arn:aws:rds:eu-west-2:xxxxxxxx:db:db-rds-database
+              - arn:aws:elasticache:eu-west-2:xxxxxxxx:serverlesscache:my-app
+
+#**********************************************************************************************************************#
+#***************************************************** IAM ROLES ******************************************************#
+#**********************************************************************************************************************#
+
+      Roles:
+        - ecsTaskRole # Specify existing IAM Role name
+        - ecsTaskExecutionRole
+
+#**********************************************************************************************************************#
+#**************************************************** END OF YAML *****************************************************#
+#**********************************************************************************************************************#
