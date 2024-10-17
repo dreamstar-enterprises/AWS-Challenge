@@ -12,15 +12,15 @@
     },
     "SecurityGroupIDs": {
       "Type": "CommaDelimitedList",
-      "Default": "sg-xxxxx"
+      "Default": "sg-xxxxxx2"
     },
     "SubnetIDs": {
       "Type": "CommaDelimitedList",
-      "Default": "subnet-xxxx1,subnet-xxxx2,subnet-xxxx3"
+      "Default": "subnet-xxxxxx1,subnet-xxxxxx2"
     },
     "VpcID": {
       "Type": "String",
-      "Default": "vpc-xxxx"
+      "Default": "vpc-xxxxxx1"
     },
     "LoadBalancerName": {
       "Type": "String",
@@ -32,7 +32,7 @@
       "Type": "AWS::ECS::Service",
       "Properties": {
         "Cluster": "MyAppCluster",
-        "TaskDefinition": "arn:aws:ecs:eu-west-2:xxxxx:task-definition/MyAppTask:4",
+        "TaskDefinition": "arn:aws:ecs:eu-west-2:123456789:task-definition/MyAppTask:11",
         "LaunchType": "FARGATE",
         "ServiceName": "MyAppService",
         "SchedulingStrategy": "REPLICA",
@@ -139,7 +139,7 @@
         "MaxCapacity": "5",
         "MinCapacity": "2",
         "ResourceId": "service/MyAppCluster/MyAppService",
-        "RoleARN": "arn:aws:iam::xxxxx:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
+        "RoleARN": "arn:aws:iam::123456789:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService",
         "ScalableDimension": "ecs:service:DesiredCount",
         "ServiceNamespace": "ecs"
       },
