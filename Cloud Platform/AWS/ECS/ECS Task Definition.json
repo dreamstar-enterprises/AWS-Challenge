@@ -36,7 +36,14 @@
             "name": "bff",
             "image": "123456789.dkr.ecr.eu-west-2.amazonaws.com/my-app/bff:latest",
             "cpu": 205,
-            "portMappings": [],
+            "portMappings": [
+                {
+                    "name": "bff",
+                    "containerPort": 9090,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
             "essential": true,
             "environment": [],
             "mountPoints": [],
@@ -65,7 +72,14 @@
             "name": "rest-api",
             "image": "123456789.dkr.ecr.eu-west-2.amazonaws.com/my-app/rest-api:latest",
             "cpu": 205,
-            "portMappings": [],
+            "portMappings": [
+                {
+                    "name": "rest-api",
+                    "containerPort": 8080,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
             "essential": true,
             "environment": [],
             "mountPoints": [],
@@ -88,7 +102,14 @@
             "name": "frontend",
             "image": "123456789.dkr.ecr.eu-west-2.amazonaws.com/my-app/frontend:latest",
             "cpu": 205,
-            "portMappings": [],
+            "portMappings": [
+                {
+                    "name": "frontend",
+                    "containerPort": 4200,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
             "essential": true,
             "environment": [],
             "mountPoints": [],
